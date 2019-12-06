@@ -68,7 +68,7 @@ class ManageAdmin extends Component {
         Axios.post(`${apiURL}movies`,data)
         .then((res)=>{
             console.log(res)
-            Axios.post(`${apiURL}movies`)
+            Axios.get(`${apiURL}movies`)
             .then((res)=>{
                 this.setState({dataFilm:res.data})
             }).catch((err)=>{
@@ -97,7 +97,7 @@ class ManageAdmin extends Component {
                             {val.synopsis}
                             <span 
                                 onClick={()=>this.setState({readMoreSelected:-1})}
-                                color='red '>
+                                color='red'>
                                  Read Less
                             </span>   
                         </TableCell>
