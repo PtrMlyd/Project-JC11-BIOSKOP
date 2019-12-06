@@ -1,0 +1,22 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.kartu{
+  border-radius: 10px;
+}
+/* div{
+  border: 2px solid red;
+} */
+/* membuat gambar menjadi membersar ketika di hover */
+.gambar{
+  transition: 700ms;
+}
+.gambar:hover{
+  transform: scale(1.1);
+  border-radius: 10px;
+}
+.gambarContainer{
+  border-radius: 10px;
+  overflow: hidden;
+}
