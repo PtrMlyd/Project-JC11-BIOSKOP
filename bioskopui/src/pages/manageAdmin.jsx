@@ -25,7 +25,6 @@ class ManageAdmin extends Component {
         dataFilm:[],
         readMoreSelected:-1,
         isOpen:false,
-        modalAdd:-1
     }
 
     componentDidMount(){
@@ -70,7 +69,7 @@ class ManageAdmin extends Component {
             console.log(res)
             Axios.get(`${apiURL}movies`)
             .then((res)=>{
-                this.setState({dataFilm:res.data})
+                this.setState({dataFilm:res.data, isOpen:false})
             }).catch((err)=>{
                 console.log(err)
             })
@@ -125,7 +124,7 @@ class ManageAdmin extends Component {
     render() { 
         return ( 
             <div className='mx3'>              
-                <Modal isOpen={this.state.modalAdd} toggle={()=>this.setState({modalAdd:false})}>
+                <Modal isOpen={this.state.isOpen} toggle={()=>this.setState({isOpen:false})}>
                     <ModalHeader>
                         Add Data
                     </ModalHeader>
@@ -144,8 +143,8 @@ class ManageAdmin extends Component {
                         <input type="text" ref='genre' placeholder='genre' className='form-control'/>
                     </ModalBody>
                     <ModalFooter>
-                        <button onClick={()=>this.onSaveAddDataClick()}> Save</button>
-                        <button onClick={()=>this.setState({modalAdd:false})}> Cancel</button>
+                        <button onClick={this.onSaveAddDataClick}> Save</button>
+                        <button onClick={()=>this.setState({isOpen:false})}> Cancel</button>
                     </ModalFooter>
                 </Modal>
             {/* </div>
