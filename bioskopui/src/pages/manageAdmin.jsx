@@ -16,15 +16,21 @@ import {
     ModalBody, 
     ModalFooter
 } from 'reactstrap'
-import color from '@material-ui/core/colors/amber';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
+
+const MySwal = withReactContent(Swal)
 
 //untuk mengelola data film
 class ManageAdmin extends Component {
     state = { 
         dataFilm:[],
         readMoreSelected:-1,
-        isOpen:false,
+        modalAdd:false,
+        modalEdit:false,
+        indexEdit:0,
+        jadwal:[12,14,16,18,20]
     }
 
     componentDidMount(){
@@ -53,6 +59,8 @@ class ManageAdmin extends Component {
         var sutradara=iniRef.sutradara.value
         var genre=iniRef.genre.value
         var durasi=iniRef.durasi.value
+        var trailer=iniRef.trailer.value
+        var studioID=iniRef.studioID
         var produksi='RANS ENTERTAINMENT'
         var data={
             title:title,
@@ -61,15 +69,17 @@ class ManageAdmin extends Component {
             sutradara,
             genre,
             durasi,
+            trailer,
+            studioID,
             produksi,
             jadwal
         }
-        Axios.post(`${apiURL}movies`,data)
+        Axios.post(`${apiURL}movies/`,data)
         .then((res)=>{
             console.log(res)
-            Axios.get(`${apiURL}movies`)
+            Axios.get(`${apiURL}movies/`)
             .then((res)=>{
-                this.setState({dataFilm:res.data, isOpen:false})
+                this.setState({dataFilm:res.data, modalAdd:false})
             }).catch((err)=>{
                 console.log(err)
             })
@@ -79,6 +89,87 @@ class ManageAdmin extends Component {
 
     }
     
+    onDeleteDataClick=(index)=>{
+        MySwal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                var data=this.state.data
+                data.splice(index,1)
+                MySwal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+                this.setState(
+                    {data:data}
+                )
+            }else if(
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ){
+                MySwal.fire(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                )
+            }
+        })
+    }
+
+    onUpdateDataClick=()=>{
+        var jadwalTemplate=this.state.jadwal
+        var jadwal=[]
+        var id= this.state.dataFilm
+        for(var i=0 ; i<5 ; i++){
+            if(this.refs[`editJadwal${i}`].checked){
+                jadwal.push(jadwalTemplate[i])
+            }
+        }
+        console.log(jadwal)
+        //ini buat looping
+        var iniRef=this.refs
+        var title= iniRef.editTitle.value
+        var image=iniRef.editImage.value
+        var synopsis=iniRef.editSynopsis.value
+        var sutradara=iniRef.editSutradara.value
+        var genre=iniRef.editGenre.value
+        var durasi=iniRef.editDurasi.value
+        var trailer=iniRef.editTrailer.value
+        var studioID=iniRef.editStudioID
+        var produksi='RANS ENTERTAINMENT'
+        var data={
+            title:title,
+            image,
+            synopsis,
+            sutradara,
+            genre,
+            durasi,
+            trailer,
+            studioID,
+            produksi,
+            jadwal
+        }
+        Axios.put(`${apiURL}movies/${id}`,data)
+        .then((res)=>{
+            console.log(res)
+            Axios.get(`${apiURL}movies/`)
+            .then((res)=>{
+                this.setState({dataFilm:res.data, modalEdit:false})
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
     splitIni=(a='')=>{
         var b= a.split('').filter((val,index)=>index<=100)
         return b
@@ -88,9 +179,9 @@ class ManageAdmin extends Component {
         return this.state.dataFilm.map((val,index)=>{
             return(
                 <TableRow key={index}>
-                    <TableCell>{index+1}</TableCell>
-                    <TableCell>{val.title}</TableCell>
-                    <TableCell><img src={val.image} alt='gambar Film' height="200px"/></TableCell>
+                    <TableCell style={{textAlign:"center"}}>{index+1}</TableCell>
+                    <TableCell style={{textAlign:"center"}}><h5>{val.title}</h5></TableCell>
+                    <TableCell style={{textAlign:"center"}}><img src={val.image} alt='gambar Film' height="200px"/></TableCell>
                     {   this.state.readMoreSelected===index?
                         <TableCell> 
                             {val.synopsis}
@@ -108,64 +199,154 @@ class ManageAdmin extends Component {
                             </span>
                         </TableCell>//kekurangan dari readmore ini adala bisanya hanya 1 data
                     }
-                    <TableCell>{val.jadwal}</TableCell>
-                    <TableCell>{val.sutradara}</TableCell>
-                    <TableCell>{val.genre}</TableCell>
-                    <TableCell>{val.durasi}</TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.jadwal}</TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.sutradara}</TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.genre}</TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.durasi}</TableCell>
                     <TableCell>
-                        <button className='btn btn-primary'> Edit </button>
-                        <button className='btn btn-danger'>  Delete </button>
+                        <button className='btn btn-primary my-2 mx-2' onClick={()=>this.setState({modalEdit:true, indexEdit:index})}> Edit </button>
+                        <button className='btn btn-danger' onClick={()=>this.onDeleteDataClick(index)}>  Delete </button>
                     </TableCell>
                 </TableRow>
             )
         })
     }
 
+    renderAddCheckBox=()=>{
+        return this.state.jadwal.map((val,index)=>{
+            return (
+             <div>
+                    <input type="checkbox" ref={`jadwal${index}`}/>
+                    <span className='mr-2'>{val}.00</span>
+                </div>   
+            )
+                
+        })
+    }
+
+    renderEditCheckBox=(indexEdit)=>{
+        var indexArr=[]
+        var dataFilmEdit=this.state.dataFilm[indexEdit].jadwal
+        // console.log(dataFilmEdit)
+        // console.log(this.state.jadwal.indexOf(dataFilmEdit[2]))
+        // dataFilmEdit.forEach((val)=>{
+        //     indexArr.push(this.state.jadwal.indexOf(val))
+        // })
+        for(var i=0; i<dataFilmEdit.length;i++){
+            for(var j=0 ; j<this.state.jadwal.length; j++){
+                if(dataFilmEdit[i]===this.state.jadwal[j]){
+                    indexArr.push(j)
+                }
+            }
+        }
+        console.log(indexArr)
+        var checkBox=this.state.jadwal
+        var checkBoxNew=[]
+            checkBox.forEach((val)=>{
+                checkBoxNew.push({jam:val, tampilEdit:false})
+        })
+        indexArr.forEach((val)=>{
+            checkBoxNew[val].tampilEdit=true
+        })
+        return checkBoxNew.map((val,index)=>{
+            if(val.tampilEdit){
+                return(
+                    <div key={index}>
+                        <input type="checkbox" defaultChecked ref={`editJadwal${index}`} value={val.jam}/>
+                        <span className='mr-2'>{val.jam}.00  </span>
+                    </div>
+                )
+            }else{
+                return (
+                    <div>
+                        <input type="checkbox"  ref={`editJadwal${index}`} value={val.jam}/>
+                        <span className='mr-2'>{val.jam}.00  </span>
+                    </div>
+                )
+            }
+        })
+    }
     render() { 
+        const {dataFilm, indexEdit}=this.state
+        const {length}=dataFilm
+        if(length===0){
+            return <div>Loading . . .</div>
+        }
         return ( 
             <div className='mx3'>              
-                <Modal isOpen={this.state.isOpen} toggle={()=>this.setState({isOpen:false})}>
+                <Modal isOpen={this.state.modalEdit} toggle={()=>this.setState({modalEdit:false})}>
+                    <ModalHeader>
+                        Edit Data {dataFilm[indexEdit].title}
+                    </ModalHeader>
+                    <ModalBody>
+                        <input type="text" ref='editTitle' defaultValue={dataFilm[indexEdit].title} placeholder='Judul' className='form-control mt-2'/>
+                        <input type="text" ref='editImage' defaultValue={dataFilm[indexEdit].image} placeholder='gambar' className='form-control mt-2'/>
+                        <input type="textarea" ref='editSynopsis' defaultValue={dataFilm[indexEdit].synopsis} placeholder='sinopsis' className='form-control mt-2'/>
+                        Jadwal : 
+                        <div className='d-flex'>
+                            {this.renderEditCheckBox(indexEdit)}
+                        </div>
+                        <input type="text" ref='editTrailer' defaultValue={dataFilm[indexEdit].trailer} placeholder='trailer' className='form-control mt-2'/>
+                        <select ref='editStudio'>
+                            <option value="1"> Studio 1</option>
+                            <option value="2"> Studio 2</option>
+                            <option value="3"> Studio 3</option>
+                        </select>
+                        <input type="text" ref='editSutradara' defaultValue={dataFilm[indexEdit].sutradara} placeholder='sutradara' className='form-control mt-2'/>
+                        <input type="number" ref='editDurasi' defaultValue={dataFilm[indexEdit].durasi} placeholder='menit' className='form-control mt-2'/>
+                        <input type="text" ref='editGenre' defaultValue={dataFilm[indexEdit].genre} placeholder='genre' className='form-control mt-2'/>
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className='btn btn-primary'> Edit </button>
+                        <button className="btn btn-danger"> Cancel</button>
+                    </ModalFooter>
+                </Modal>
+                <Modal isOpen={this.state.modalAdd} toggle={()=>this.setState({modalAdd:false})}>
                     <ModalHeader>
                         Add Data
                     </ModalHeader>
                     <ModalBody>
-                        <input type="text" ref='title' placeholder='Judul' className='form-control'/>
-                        <input type="text" ref='image' placeholder='gambar' className='form-control'/>
-                        <input type="textarea" ref='synopsis' placeholder='sinopsis' className='form-control'/>
+                        Judul : <input type="text" ref='title' placeholder='Judul' className='form-control mt-2'/>
+                        Image : <input type="text" ref='image' placeholder='gambar <source code>' className='form-control mt-2'/>
+                        Synopsis :<input type='textarea' ref='synopsis' placeholder='sinopsis' className='form-control mt-2'/>
                         Jadwal : 
-                            <input type="checkbox" ref='jadwal0'/> 12.00
-                            <input type="checkbox" ref='jadwal1'/> 14.00
-                            <input type="checkbox" ref='jadwal2'/> 16.00
-                            <input type="checkbox" ref='jadwal3'/> 18.00
-                            <input type="checkbox" ref='jadwal4'/> 20.00
-                        <input type="text" ref='sutradara' placeholder='sutradara' className='form-control'/>
-                        <input type="number" ref='durasi' placeholder='menit' className='form-control'/>
-                        <input type="text" ref='genre' placeholder='genre' className='form-control'/>
+                        <div className='d-flex'>
+                            {this.renderAddCheckBox()}
+                        </div>
+                        Trailer : <input type="text" ref='trailer' placeholder='trailer <source code>' className='form-control mt-2'/>
+                        Studio : <select ref='studio'>
+                            <option value="1"> Studio 1</option>
+                            <option value="2"> Studio 2</option>
+                            <option value="3"> Studio 3</option>
+                        </select>
+                        Sutradara : <input type="text" ref='sutradara' placeholder='sutradara' className='form-control mt-2'/>
+                        Durasi : <input type="number" ref='durasi' placeholder='dalam menit' className='form-control mt-2'/>
+                        Genre : <input type="text" ref='genre' placeholder='genre' className='form-control mt-2'/>
                     </ModalBody>
                     <ModalFooter>
-                        <button onClick={this.onSaveAddDataClick}> Save</button>
-                        <button onClick={()=>this.setState({isOpen:false})}> Cancel</button>
+                        <button onClick={this.onUpdateDataClick}> Save</button>
+                        <button onClick={()=>this.setState({modalAdd:false})}> Cancel</button>
                     </ModalFooter>
                 </Modal>
             {/* </div>
-            <div> */}
+            <div> */}       
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>
-                                <button onClick={()=>this.setState({isOpen:true})}>Add Data</button>
+                            <TableCell colSpan='9' style={{textAlign:"right"}}>
+                                <button className='btn btn-success' onClick={()=>this.setState({modalAdd:true})}>New Film</button>
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>No. </TableCell>
-                            <TableCell>Judul </TableCell>
-                            <TableCell>Image </TableCell>
-                            <TableCell>Sinopsis </TableCell>
-                            <TableCell>Jadwal </TableCell>
-                            <TableCell>Sutradara </TableCell>
-                            <TableCell>Genre </TableCell>
-                            <TableCell>Durasi </TableCell>
-                            <TableCell>Action </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Judul </TableCell>
+                            <TableCell style={{textAlign:"center"}}> Image </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Sinopsis </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Jadwal </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Sutradara </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Genre </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Durasi </TableCell>
+                            <TableCell style={{textAlign:"center"}}>Action </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

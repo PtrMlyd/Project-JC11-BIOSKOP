@@ -14,6 +14,7 @@ import {
 } from 'reactstrap';
 import {Link} from 'react-router-dom'
 
+
 const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,26 +27,29 @@ const Header = (props) => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            <NavItem>
-              <Link to="/manageAdmin" >Manage Admin</Link>
+            <NavItem className='pt-2 pr-2' >
+              <input type="text" placeholder='Cari Film'/>
             </NavItem>
-            <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+            <NavItem className='pt-2 pr-2'>
+              <Link to="/manageAdmin" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Manage Admin</Link>
+            </NavItem>
+            <NavItem className='pt-2'>
+              <Link to="/Login" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Login</Link>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                Options
+              <DropdownToggle nav >
+                My Account
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem>
-                  Option 1
+                  View Profile
                 </DropdownItem>
                 <DropdownItem>
-                  Option 2
+                  View Cart
                 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem>
-                  Reset
+                  Sign Out
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

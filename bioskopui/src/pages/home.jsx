@@ -21,8 +21,8 @@ class Home extends Component {
         return this.state.dataMovies.map((val,index)=>{
             return(
                  <div key={index}className="col-md-3 py-5 pr-3 pl-1">
-                    <div className="card kartu" style={{width: '100%'}}>
-                        <div className="gambarContainer">
+                    <div className="cardKartu" style={{width: '100%'}}>
+                        <div className="gambarContainer" >
                             <img src={val.image} className="card-img-top kartu gambar" alt="..." />
                         </div>
                         <div className="card-body">
@@ -35,8 +35,7 @@ class Home extends Component {
             )
         })
     }
-
-
+    
     render() { 
         return ( 
             <div className='mx-5'> 

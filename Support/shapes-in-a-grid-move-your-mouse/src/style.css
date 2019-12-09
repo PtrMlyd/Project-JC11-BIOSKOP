@@ -1,0 +1,24 @@
+body {
+ margin: 0;
+ 
+ background-color: #E6E8E6;
+ overflow: hidden;
+}
+
+canvas {
+ width: 100vw;
+ height: 100vh;
+}
+
+.cursor {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  
+  border-radius: 50%;
+  background-color: white;
+  
+  mix-blend-mode: exclusion;
+  transform: translate3d(-50%, -50%, 0);
+  cursor: none;
+}

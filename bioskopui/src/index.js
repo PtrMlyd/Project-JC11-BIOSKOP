@@ -5,11 +5,18 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.css'
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from 'react-router-dom'
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
+import Reducers from "./redux/reducers"; //lansgsung mengarah ke index
+
+const store=createStore(Reducers)
 
 ReactDOM.render(
-<BrowserRouter>
-    <App />
-</BrowserRouter>
+    <Provider store={store}>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+</Provider>
 , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
