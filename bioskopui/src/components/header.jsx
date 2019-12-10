@@ -27,15 +27,12 @@ const Header = (props) => {
         <NavbarBrand href="/">BIOSKOP JC11</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
-          <Nav className="ml-auto" navbar>
-            <NavItem className='pt-2 pr-2' >
-              <input type="text" placeholder='Cari Film'/>
-            </NavItem>
-            <NavItem className='pt-2 pr-2'>
-              <Link to="/manageAdmin" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Manage Admin</Link>
+          <Nav className=" ml-auto" navbar>
+            <NavItem className='pt-2'>
+              <Link to="/manageAdmin"  style={{textDecoration:"none" ,color:'#9a9da0'}}>Manage Admin</Link>
             </NavItem>
             {props.namauser===''?
-              <NavItem className='pt-2'>
+              <NavItem className='menu'>
                 <Link to="/Login" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Login</Link>
               </NavItem>
               :
@@ -72,8 +69,8 @@ const Header = (props) => {
 
 const mapStateToProps=(state)=>{
   return{
-    namauser:state.auth.username
-  }
+    namauser:state.auth.userName
+  } 
 }
 
 export default connect(mapStateToProps)(Header);

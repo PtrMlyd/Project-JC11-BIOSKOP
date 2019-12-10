@@ -41,16 +41,30 @@
       "sutradara": "Jake Kasdan",
       "genre": "action",
       "durasi": "135",
-      "trailer": "",
+      "trailer": "https://www.youtube.com/embed/F6QaLsw8EWY",
+      "studioID": "2",
+      "produksi": "RANS ENTERTAINMENT",
+      "jadwal": [
+        12
+      ],
+      "id": 1
+    },
+    {
+      "title": "Potato's House",
+      "image": "https://media.21cineplex.com/webcontent/gallery/pictures/157129577038373_405x594.jpg",
+      "synopsis": "Adrian adalah seorang penulis novel horor yang buku-bukunya mulai ditinggalkan pembacanya. Untuk menulis novel terbarunya, ia bersama istrinya, Sophie, memutuskan kembali ke rumah masa kecil Sophie yang sudah lama tidak dikunjungi Sophie, sejak kedua orang tua Sophie tiba-tiba menghilang tanpa jejak. Kini ditemani Uwa-nya dan ketiga anaknya; Nina, Nala dan Bayu; Sophie akhirnya menginjakkan kaki kembali di rumah tersebut. Namun sesampainya mereka disana, gangguan demi gangguan segera menyerang mereka. Gangguan yang mereka hiraukan pada awalnya sampai akhirnya anak tertua mereka, Nina, tiba-tiba juga menghilang tanpa jejak. Kini demi mendapatkan kembali Nina, Sophie dan Adrian harus mencari tahu apa yang sebenarnya terjadi di rumah ini, sebuah rumah yang berdiri di perkebunan kentang orang tua Sophie, terlebih ketika Uwa diberitahu oleh seorang warga desa, Dadang, bahwa rumah itu lebih buruk dari apa yang mereka bayangkan. Bahwa tidak hanya Nina yang berada dalam bahaya. Tapi mereka semua.",
+      "sutradara": "Rizal Mantovani",
+      "genre": "Horror, Action",
+      "durasi": "102",
+      "trailer": "https://www.youtube.com/embed/Tj719XsBeM0",
       "studioID": "1",
       "produksi": "RANS ENTERTAINMENT",
       "jadwal": [
-        12,
-        16,
+        14,
         18,
         20
       ],
-      "id": 1
+      "id": 2
     }
   ]
 }

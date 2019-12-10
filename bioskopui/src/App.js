@@ -4,6 +4,8 @@ import Home from './pages/home'
 import './App.css';
 import {Switch,Route} from 'react-router-dom'
 import ManageAdmin from './pages/manageAdmin'
+import movieDetails from './pages/movieDetails'
+import beliTiket from './pages/beliTiket'
 import Login from './pages/login'
 import {connect} from 'react-redux'
 import {loginSuccessAction} from './redux/actions'
@@ -37,9 +39,9 @@ class App extends Component {
           <Route path={'/'} exact>
             <Home/>
           </Route>
-          <Route path={'/manageAdmin'} exact>
-            <ManageAdmin/>
-          </Route>
+          <Route path={'/manageAdmin'} exact component={ManageAdmin}/>
+          <Route path={'/movieDetails/:id'} exact component={movieDetails}/>
+          <Route path={'/beliTiket'} exact component={beliTiket}/>
           <Route path={'/Login'} exact component={Login}/>
         </Switch>
    </div>

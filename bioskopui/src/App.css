@@ -17,6 +17,14 @@
   border-radius: 10px;
   overflow: hidden;
 }
+.username:focus{
+  outline: transparent;
+}
+.trailer{
+  background-color: transparent;
+  height: 500px;
+  padding: 0;
+}
 
 
 

@@ -6,9 +6,6 @@ import {
     TableHead, 
     TableCell, 
     TableRow,
-    TableFooter,
-    fade,
-    Fade, 
 } from '@material-ui/core'
 import Axios from 'axios'
 import { apiURL } from '../support/apiURL';
@@ -48,7 +45,7 @@ class ManageAdmin extends Component {
         var jadwalTemplate=[12,14,16,18,20]
         var jadwal=[]
         for(var i=0 ; i<jadwalTemplate.length ; i++){
-            if(this.refs[`editJadwal${i}`].checked){
+            if(this.refs[`jadwal${i}`].checked){
                 jadwal.push(jadwalTemplate[i])
             }
         }
@@ -184,7 +181,7 @@ class ManageAdmin extends Component {
             return(
                 <TableRow key={index}>
                     <TableCell style={{textAlign:"center"}}>{index+1}</TableCell>
-                    <TableCell style={{textAlign:"center"}}><h5>{val.title}</h5></TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.title}</TableCell>
                     <TableCell style={{textAlign:"center"}}><img src={val.image} alt='gambar Film' height="200px"/></TableCell>
                     {   this.state.readMoreSelected===index?
                         <TableCell style={{width:'300px'}}> 
@@ -204,7 +201,8 @@ class ManageAdmin extends Component {
                             </span>
                         </TableCell>//kekurangan dari readmore ini adala bisanya hanya 1 data
                     }
-                    <TableCell style={{textAlign:"center"}}>{val.jadwal}</TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.jadwal+','}</TableCell>
+                    <TableCell style={{textAlign:"center"}}>{val.studioID}</TableCell>
                     <TableCell style={{textAlign:"center"}}>{val.sutradara}</TableCell>
                     <TableCell style={{textAlign:"center"}}>{val.genre}</TableCell>
                     <TableCell style={{textAlign:"center"}}>{val.durasi}</TableCell>
@@ -284,22 +282,22 @@ class ManageAdmin extends Component {
                         Edit Data {dataFilm[indexEdit].title}
                     </ModalHeader>
                     <ModalBody>
-                        <input type="text" ref='editTitle' defaultValue={dataFilm[indexEdit].title} placeholder='Judul' className='form-control mt-2'/>
-                        <input type="text" ref='editImage' defaultValue={dataFilm[indexEdit].image} placeholder='gambar' className='form-control mt-2'/>
-                        <textarea rows='5' ref='editSynopsis' defaultValue={dataFilm[indexEdit].synopsis} placeholder='sinopsis' className='form-control mt-2'/>
+                        Judul : <input type="text" ref='editTitle' defaultValue={dataFilm[indexEdit].title} placeholder='Judul' className='form-control mt-2'/>
+                        Image : <input type="text" ref='editImage' defaultValue={dataFilm[indexEdit].image} placeholder='gambar' className='form-control mt-2'/>
+                        Sinopsis : <textarea rows='5' ref='editSynopsis' defaultValue={dataFilm[indexEdit].synopsis} placeholder='sinopsis' className='form-control mt-2'/>
                         Jadwal : 
                         <div className='d-flex'>
                             {this.renderEditCheckBox(indexEdit)}
                         </div>
-                        <input type="text" ref='editTrailer' defaultValue={dataFilm[indexEdit].trailer} placeholder='trailer' className='form-control mt-2'/>
-                        <select ref='editStudio' className='form-control'>
+                        Trailer : <input type="text" ref='editTrailer' defaultValue={dataFilm[indexEdit].trailer} placeholder='trailer' className='form-control mt-2'/>
+                        Studio : <select ref='editStudio' className='form-control'>
                             <option value="1"> Studio 1</option>
                             <option value="2"> Studio 2</option>
                             <option value="3"> Studio 3</option>
                         </select>
-                        <input type="text" ref='editSutradara' defaultValue={dataFilm[indexEdit].sutradara} placeholder='sutradara' className='form-control mt-2'/>
-                        <input type="number" ref='editDurasi' defaultValue={dataFilm[indexEdit].durasi} placeholder='menit' className='form-control mt-2'/>
-                        <input type="text" ref='editGenre' defaultValue={dataFilm[indexEdit].genre} placeholder='genre' className='form-control mt-2'/>
+                        Sutradara : <input type="text" ref='editSutradara' defaultValue={dataFilm[indexEdit].sutradara} placeholder='sutradara' className='form-control mt-2'/>
+                        Durasi : <input type="number" ref='editDurasi' defaultValue={dataFilm[indexEdit].durasi} placeholder='menit' className='form-control mt-2'/>
+                        Genre : <input type="text" ref='editGenre' defaultValue={dataFilm[indexEdit].genre} placeholder='genre' className='form-control mt-2'/>
                     </ModalBody>
                     <ModalFooter>
                         <button onClick={this.onUpdateDataClick} className='btn btn-primary'> Save </button>
@@ -319,7 +317,7 @@ class ManageAdmin extends Component {
                             {this.renderAddCheckBox()}
                         </div>
                         Trailer : <input type="text" ref='trailer' placeholder='trailer <source code>' className='form-control mt-2'/>
-                        Studio : <select ref='studio'>
+                        Studio : <select ref='studio' className='form-control'>
                             <option value="1"> Studio 1</option>
                             <option value="2"> Studio 2</option>
                             <option value="3"> Studio 3</option>
@@ -329,7 +327,7 @@ class ManageAdmin extends Component {
                         Genre : <input type="text" ref='genre' placeholder='genre' className='form-control mt-2'/>
                     </ModalBody>
                     <ModalFooter>
-                        <button onClick={this.onUpdateDataClick}> Save</button>
+                        <button onClick={this.onSaveAddDataClick}> Save</button>
                         <button onClick={()=>this.setState({modalAdd:false})}> Cancel</button>
                     </ModalFooter>
                 </Modal>
@@ -339,16 +337,18 @@ class ManageAdmin extends Component {
                     <Table size='small'>
                         <TableHead>
                             <TableRow>
-                                <TableCell colSpan='9' style={{textAlign:"right"}}>
+                                <TableCell colSpan='10' style={{textAlign:"right"}}>
+                                    <input className='mr-4 ' type="text" placeholder='Cari Film'/>
                                     <button className='btn btn-success' onClick={()=>this.setState({modalAdd:true})}>New Film</button>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>No. </TableCell>
                                 <TableCell style={{textAlign:"center"}}>Judul </TableCell>
-                                <TableCell style={{textAlign:"center"}}> Image </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Image </TableCell>
                                 <TableCell style={{textAlign:"center"}}>Sinopsis </TableCell>
                                 <TableCell style={{textAlign:"center"}}>Jadwal </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Studio </TableCell>
                                 <TableCell style={{textAlign:"center"}}>Sutradara </TableCell>
                                 <TableCell style={{textAlign:"center"}}>Genre </TableCell>
                                 <TableCell style={{textAlign:"center"}}>Durasi </TableCell>
