@@ -13,6 +13,7 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 
 
 const Header = (props) => {
@@ -33,26 +34,35 @@ const Header = (props) => {
             <NavItem className='pt-2 pr-2'>
               <Link to="/manageAdmin" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Manage Admin</Link>
             </NavItem>
-            <NavItem className='pt-2'>
-              <Link to="/Login" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Login</Link>
-            </NavItem>
-            <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav >
-                My Account
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem>
-                  View Profile
-                </DropdownItem>
-                <DropdownItem>
-                  View Cart
-                </DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>
-                  Sign Out
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            {props.namauser===''?
+              <NavItem className='pt-2'>
+                <Link to="/Login" className='' style={{textDecoration:"none" ,color:'#9a9da0'}}>Login</Link>
+              </NavItem>
+              :
+              null
+            }
+            {
+              props.namauser===''?
+              null
+              :
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  {props.namauser}
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem>
+                    View Profile
+                  </DropdownItem>
+                  <DropdownItem>
+                    View Cart
+                  </DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem>
+                    Sign Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            }
           </Nav>
         </Collapse>
       </Navbar>
@@ -60,4 +70,10 @@ const Header = (props) => {
   );
 }
 
-export default Header;
+const mapStateToProps=(state)=>{
+  return{
+    namauser:state.auth.username
+  }
+}
+
+export default connect(mapStateToProps)(Header);

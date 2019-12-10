@@ -1,14 +1,35 @@
-import React from 'react';
+import React,{Component} from 'react';
 import Header from './components/header'
 import Home from './pages/home'
 import './App.css';
 import {Switch,Route} from 'react-router-dom'
 import ManageAdmin from './pages/manageAdmin'
 import Login from './pages/login'
+import {connect} from 'react-redux'
+import {loginSuccessAction} from './redux/actions'
+import Axios from 'axios';
+import { apiURL } from './support/apiURL';
 
 class App extends Component {
-  state = {  }
+  state = { 
+    loading:true
+  }
+
+  componentDidMount(){
+    var id=localStorage.getItem('user')
+    Axios.get(`${apiURL}user/${id}`)
+    .then((res)=>{
+      this.props.loginSuccessAction(res.data)
+      this.setState({loading:false})
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+
   render() { 
+    // if(this.state.loading){
+    //   return <div> Loading . . .</div>
+    // }
     return ( 
       <div>
         <Header/>
@@ -19,14 +40,18 @@ class App extends Component {
           <Route path={'/manageAdmin'} exact>
             <ManageAdmin/>
           </Route>
-          <Route path={'/Login'} exact exact >
-            <Login/>
-          </Route>
+          <Route path={'/Login'} exact component={Login}/>
         </Switch>
    </div>
      );
   }
 }
+
+const mapStateToProps=(state)=>{
+  return{
+    authLog:state.auth.login
+  }
+}
  
-export default App  
+export default connect(mapStateToProps,{loginSuccessAction}) (App)  
 

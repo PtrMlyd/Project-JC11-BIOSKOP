@@ -1,6 +1,6 @@
 const INITIAL_STATE={
     id:'',
-    userName:'',
+    username:'',
     password:'',
     login:false
 }

@@ -6,7 +6,9 @@ import {
     TableHead, 
     TableCell, 
     TableRow,
-    TableFooter, 
+    TableFooter,
+    fade,
+    Fade, 
 } from '@material-ui/core'
 import Axios from 'axios'
 import { apiURL } from '../support/apiURL';
@@ -45,11 +47,12 @@ class ManageAdmin extends Component {
     onSaveAddDataClick=()=>{
         var jadwalTemplate=[12,14,16,18,20]
         var jadwal=[]
-        for(var i=0 ; i<5 ; i++){
-            if(this.refs[`jadwal${i}`].checked){
+        for(var i=0 ; i<jadwalTemplate.length ; i++){
+            if(this.refs[`editJadwal${i}`].checked){
                 jadwal.push(jadwalTemplate[i])
             }
         }
+        console.log("Masuk SaveAddDataClik")
         console.log(jadwal)
         //ini buat looping
         var iniRef=this.refs
@@ -126,12 +129,13 @@ class ManageAdmin extends Component {
     onUpdateDataClick=()=>{
         var jadwalTemplate=this.state.jadwal
         var jadwal=[]
-        var id= this.state.dataFilm
-        for(var i=0 ; i<5 ; i++){
+        var id= this.state.dataFilm[this.state.indexEdit].id
+        for(var i=0 ; i<jadwalTemplate.length ; i++){
             if(this.refs[`editJadwal${i}`].checked){
                 jadwal.push(jadwalTemplate[i])
             }
         }
+        console.log("Masuk UpdateData")
         console.log(jadwal)
         //ini buat looping
         var iniRef=this.refs
@@ -142,7 +146,7 @@ class ManageAdmin extends Component {
         var genre=iniRef.editGenre.value
         var durasi=iniRef.editDurasi.value
         var trailer=iniRef.editTrailer.value
-        var studioID=iniRef.editStudioID
+        var studioID=iniRef.editStudio.value
         var produksi='RANS ENTERTAINMENT'
         var data={
             title:title,
@@ -156,9 +160,9 @@ class ManageAdmin extends Component {
             produksi,
             jadwal
         }
+        console.log(id)
         Axios.put(`${apiURL}movies/${id}`,data)
-        .then((res)=>{
-            console.log(res)
+        .then(()=>{
             Axios.get(`${apiURL}movies/`)
             .then((res)=>{
                 this.setState({dataFilm:res.data, modalEdit:false})
@@ -183,18 +187,19 @@ class ManageAdmin extends Component {
                     <TableCell style={{textAlign:"center"}}><h5>{val.title}</h5></TableCell>
                     <TableCell style={{textAlign:"center"}}><img src={val.image} alt='gambar Film' height="200px"/></TableCell>
                     {   this.state.readMoreSelected===index?
-                        <TableCell> 
+                        <TableCell style={{width:'300px'}}> 
                             {val.synopsis}
                             <span 
                                 onClick={()=>this.setState({readMoreSelected:-1})}
-                                color='red'>
+                                style={{color:'red'}} >
                                  Read Less
                             </span>   
                         </TableCell>
                         :
-                        <TableCell>
+                        <TableCell style={{width:'300px'}}>
                             {this.splitIni(val.synopsis)}
-                            <span onClick={()=>this.setState({readMoreSelected:index})}>
+                            <span onClick={()=>this.setState({readMoreSelected:index})}
+                            style={{color:'red'}}>
                                  Read More . . .
                             </span>
                         </TableCell>//kekurangan dari readmore ini adala bisanya hanya 1 data
@@ -203,8 +208,8 @@ class ManageAdmin extends Component {
                     <TableCell style={{textAlign:"center"}}>{val.sutradara}</TableCell>
                     <TableCell style={{textAlign:"center"}}>{val.genre}</TableCell>
                     <TableCell style={{textAlign:"center"}}>{val.durasi}</TableCell>
-                    <TableCell>
-                        <button className='btn btn-primary my-2 mx-2' onClick={()=>this.setState({modalEdit:true, indexEdit:index})}> Edit </button>
+                    <TableCell >
+                        <button className='btn btn-primary my-2 mr-1' onClick={()=>this.setState({modalEdit:true, indexEdit:index})}> Edit </button>
                         <button className='btn btn-danger' onClick={()=>this.onDeleteDataClick(index)}>  Delete </button>
                     </TableCell>
                 </TableRow>
@@ -227,7 +232,7 @@ class ManageAdmin extends Component {
     renderEditCheckBox=(indexEdit)=>{
         var indexArr=[]
         var dataFilmEdit=this.state.dataFilm[indexEdit].jadwal
-        // console.log(dataFilmEdit)
+        console.log(dataFilmEdit)
         // console.log(this.state.jadwal.indexOf(dataFilmEdit[2]))
         // dataFilmEdit.forEach((val)=>{
         //     indexArr.push(this.state.jadwal.indexOf(val))
@@ -258,7 +263,7 @@ class ManageAdmin extends Component {
                 )
             }else{
                 return (
-                    <div>
+                    <div key={index}>
                         <input type="checkbox"  ref={`editJadwal${index}`} value={val.jam}/>
                         <span className='mr-2'>{val.jam}.00  </span>
                     </div>
@@ -273,7 +278,7 @@ class ManageAdmin extends Component {
             return <div>Loading . . .</div>
         }
         return ( 
-            <div className='mx3'>              
+            <div className='mx-3'>              
                 <Modal isOpen={this.state.modalEdit} toggle={()=>this.setState({modalEdit:false})}>
                     <ModalHeader>
                         Edit Data {dataFilm[indexEdit].title}
@@ -281,13 +286,13 @@ class ManageAdmin extends Component {
                     <ModalBody>
                         <input type="text" ref='editTitle' defaultValue={dataFilm[indexEdit].title} placeholder='Judul' className='form-control mt-2'/>
                         <input type="text" ref='editImage' defaultValue={dataFilm[indexEdit].image} placeholder='gambar' className='form-control mt-2'/>
-                        <input type="textarea" ref='editSynopsis' defaultValue={dataFilm[indexEdit].synopsis} placeholder='sinopsis' className='form-control mt-2'/>
+                        <textarea rows='5' ref='editSynopsis' defaultValue={dataFilm[indexEdit].synopsis} placeholder='sinopsis' className='form-control mt-2'/>
                         Jadwal : 
                         <div className='d-flex'>
                             {this.renderEditCheckBox(indexEdit)}
                         </div>
                         <input type="text" ref='editTrailer' defaultValue={dataFilm[indexEdit].trailer} placeholder='trailer' className='form-control mt-2'/>
-                        <select ref='editStudio'>
+                        <select ref='editStudio' className='form-control'>
                             <option value="1"> Studio 1</option>
                             <option value="2"> Studio 2</option>
                             <option value="3"> Studio 3</option>
@@ -297,8 +302,8 @@ class ManageAdmin extends Component {
                         <input type="text" ref='editGenre' defaultValue={dataFilm[indexEdit].genre} placeholder='genre' className='form-control mt-2'/>
                     </ModalBody>
                     <ModalFooter>
-                        <button className='btn btn-primary'> Edit </button>
-                        <button className="btn btn-danger"> Cancel</button>
+                        <button onClick={this.onUpdateDataClick} className='btn btn-primary'> Save </button>
+                        <button onClick={()=>this.setState({modalEdit:false})} className="btn btn-danger"> Cancel</button>
                     </ModalFooter>
                 </Modal>
                 <Modal isOpen={this.state.modalAdd} toggle={()=>this.setState({modalAdd:false})}>
@@ -308,7 +313,7 @@ class ManageAdmin extends Component {
                     <ModalBody>
                         Judul : <input type="text" ref='title' placeholder='Judul' className='form-control mt-2'/>
                         Image : <input type="text" ref='image' placeholder='gambar <source code>' className='form-control mt-2'/>
-                        Synopsis :<input type='textarea' ref='synopsis' placeholder='sinopsis' className='form-control mt-2'/>
+                        Synopsis :<input type='textarea' ref='synopsis' placeholder='sinopsis' className='form-control mt-2 mb-2'/>
                         Jadwal : 
                         <div className='d-flex'>
                             {this.renderAddCheckBox()}
@@ -329,30 +334,32 @@ class ManageAdmin extends Component {
                     </ModalFooter>
                 </Modal>
             {/* </div>
-            <div> */}       
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell colSpan='9' style={{textAlign:"right"}}>
-                                <button className='btn btn-success' onClick={()=>this.setState({modalAdd:true})}>New Film</button>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>No. </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Judul </TableCell>
-                            <TableCell style={{textAlign:"center"}}> Image </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Sinopsis </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Jadwal </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Sutradara </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Genre </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Durasi </TableCell>
-                            <TableCell style={{textAlign:"center"}}>Action </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.renderMovies()}
-                    </TableBody>
-                </Table>
+            <div> */}
+                {/* <Fade> */}
+                    <Table size='small'>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell colSpan='9' style={{textAlign:"right"}}>
+                                    <button className='btn btn-success' onClick={()=>this.setState({modalAdd:true})}>New Film</button>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>No. </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Judul </TableCell>
+                                <TableCell style={{textAlign:"center"}}> Image </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Sinopsis </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Jadwal </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Sutradara </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Genre </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Durasi </TableCell>
+                                <TableCell style={{textAlign:"center"}}>Action </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.renderMovies()}
+                        </TableBody>
+                    </Table>
+                {/* </Fade>        */}
             </div>
         );
     }

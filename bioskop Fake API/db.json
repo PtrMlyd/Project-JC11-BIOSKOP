@@ -16,40 +16,41 @@
       "password": "kabur"
     }
   ],
-  "studios":[
+  "studios": [
     {
       "id": 1,
       "nama": "Studio 1",
-      "jumlahKursi":260
+      "jumlahKursi": 260
     },
     {
       "id": 2,
       "nama": "Studio 2",
-      "jumlahKursi":240
+      "jumlahKursi": 240
     },
     {
       "id": 3,
       "nama": "Studio 3",
-      "jumlahKursi":200
+      "jumlahKursi": 200
     }
   ],
   "movies": [
     {
-      "id": 1,
       "title": "Jumanji: The Next Level",
-      "sutradara": "Jake Kasdan",
-      "durasi": 135,
-      "jadwal": [
-        9,
-        12,
-        16
-      ],
-      "synopsis": "Dwayne Johnson, Karen Gillan, Jack Black dan Kevin Hart kembali ke Jumanji, keempatnya harus menyelamatkan salah satu teman mereka. Namun permainan telah berubah. Para pemain kini harus lebih berani melintasi rintangan ekstrem dan kembali dengan selamat dari permainan paling berbahaya di dunia.",
       "image": "https://media.21cineplex.com/webcontent/gallery/pictures/157422945871583_287x421.jpg",
+      "synopsis": "Dwayne Johnson, Karen Gillan, Jack Black dan Kevin Hart kembali ke Jumanji, keempatnya harus menyelamatkan salah satu teman mereka. Namun permainan telah berubah. Para pemain kini harus lebih berani melintasi rintangan ekstrem dan kembali dengan selamat dari permainan paling berbahaya di dunia.",
+      "sutradara": "Jake Kasdan",
       "genre": "action",
-      "produksi": "Columbia Pictures",
-      "trailer":""
+      "durasi": "135",
+      "trailer": "",
+      "studioID": "1",
+      "produksi": "RANS ENTERTAINMENT",
+      "jadwal": [
+        12,
+        16,
+        18,
+        20
+      ],
+      "id": 1
     }
-    
   ]
 }

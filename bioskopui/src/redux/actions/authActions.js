@@ -1,6 +1,6 @@
-export const loginSuccessAction=(dataUSer)=>{
+export const loginSuccessAction=(dataUser)=>{
     return{
         type:'LOGIN_SUCCESS',
-        payload:dataUSer //payload untuk mengirim data ke user
+        payload:dataUser //payload untuk mengirim data ke user
     }
 }
